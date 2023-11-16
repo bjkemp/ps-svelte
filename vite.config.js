@@ -10,6 +10,11 @@ const components = fs.readdirSync(path.resolve(__dirname, 'src/components'))
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      $ps: path.resolve('./src/powerschool/WEB_ROOT')
+    }
+  },
   plugins: [
     svelte({
       compilerOptions: {
@@ -22,7 +27,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
     outDir: 'dist/WEB_ROOT/ps-svelte/',
-    assetsDir: 'ps-svelte/assets',
+    assetsDir: '/assets',
     emptyOutDir: true,
     minify: true,
     rollupOptions: {
