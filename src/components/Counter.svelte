@@ -1,12 +1,19 @@
-<svelte:options customElement="ps-svelte-button" />
+<svelte:options customElement="ps-svelte-counter" />
 <script>
   // Component props
   export let type = "solid";
+
+  let count = 0
+  const increment = () => {
+    count += 1
+  }
 </script>
 
-<button class={type == "solid" ? "btn-solid" : "btn-outline"}>
-  <slot />
+<button class={type == "solid" ? "btn-solid" : "btn-outline"} on:click={increment}>
+  count is {count}
 </button>
+
+<slot />
 
 <style>
   button {
