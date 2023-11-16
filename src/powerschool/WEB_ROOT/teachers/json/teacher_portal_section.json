@@ -18,7 +18,7 @@
 				0
 			END Active,
 	    sections.COURSE_NUMBER || '-' || sections.section_number section_name,
-	    COALESCE(teachers.EMAIL_ADDR, 'powerschool.tesd.net') teacher_email,
+	    COALESCE(teachers.EMAIL_ADDR, 'powerschool@tesd.net') teacher_email,
 	    JSON_ARRAYAGG(emailaddress.emailaddress ORDER BY emailaddress.emailaddress) email_list
 	FROM sections
     	INNER JOIN courses ON courses.course_number = sections.course_number
