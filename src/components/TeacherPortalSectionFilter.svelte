@@ -21,3 +21,18 @@
     <option value={section.ID}>{section.COURSE_NAME}</option>
   {/each}
 </select>
+
+<style>
+  #sections {
+    margin: 0 0 0 10px;
+    padding: 0;
+    height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 5px;
+  
+  }
+</style>
