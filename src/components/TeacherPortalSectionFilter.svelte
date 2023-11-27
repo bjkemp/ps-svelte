@@ -16,5 +16,8 @@
   });
 </script>
 
-Hi, I'm a teacher portal section filter!
-{sections}
+<select name="sections" id="sections">
+  {#each sections as section}
+    <option value={section.ID}>{section.COURSE_NAME}</option>
+  {/each}
+</select>
