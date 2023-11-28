@@ -2,7 +2,7 @@
 <script>
   import { onMount } from 'svelte'
   import md5 from 'md5'
-  import devSections from '$ps/teachers/json/section.json'
+  import devSections from '../assets/sections.json'
 
   // Determine the environment (production or development)
   const isProduction = !import.meta.env.DEV;
@@ -17,7 +17,7 @@
   async function loadSections() {
     if (isProduction) {
       // Fetch sections data from the production server
-      const response = await fetch('/teachers/json/section.json')
+      const response = await fetch('/teachers/json/teacher_portal_section.json')
       sections = await response.json()
     } else {
       // Use development sections data
