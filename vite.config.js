@@ -19,7 +19,7 @@ export default defineConfig({
     svelte({
       compilerOptions: {
         customElement: true,
-        // enable run-time checks when not in production
+        // Enable run-time checks when not in production
         dev: true,
       },
     }),
@@ -33,18 +33,22 @@ export default defineConfig({
     rollupOptions: {
       input: components,
       output: {
-        format: 'iife',
+        format: 'es',
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
         assetFileNames: '[name].[ext]',
-        manualChunks: undefined,
         exports: 'named',
         sourcemap: false,
         sourcemapExcludeSources: false,
         inlineDynamicImports: false,
-        plugins: [],
       },
       plugins: [],
+    },
+  },
+  server: {
+    // Enable Hot Module Replacement during development
+    hmr: {
+      overlay: false,
     },
   },
 });

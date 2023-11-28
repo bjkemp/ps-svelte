@@ -1,25 +1,36 @@
 <svelte:options customElement="ps-svelte-teacher-portal-section-filter" />
 <script>
-  import { onMount } from 'svelte';
-  import md5 from 'md5';
-  import devSections from '$ps/teachers/json/section.json';
+  import { onMount } from 'svelte'
+  import md5 from 'md5'
+  import devSections from '$ps/teachers/json/section.json'
 
-  let sections = [];
-  let filters = new Set(['Hey']); // Use a Set to store unique values
+  // Determine the environment (production or development)
+  const isProduction = !import.meta.env.DEV;
 
+  // Array for section data
+  let sections = []
+
+  // Set for unique filters
+  let filters = new Set()
+
+  // Asynchronously load sections data
   async function loadSections() {
-    const isProduction = false; /* Add your logic here to check if the environment is production */
     if (isProduction) {
-      const response = await fetch('/teachers/json/section.json');
-      sections = await response.json();
+      // Fetch sections data from the production server
+      const response = await fetch('/teachers/json/section.json')
+      sections = await response.json()
     } else {
-      sections = devSections;
+      // Use development sections data
+      sections = devSections
     }
   }
 
+  // Process a section and add filters
   function processSection(section) {
-    let not_in_session = false;
-    
+    // Flag indicating if the section is in session
+    const not_in_session = false
+
+    // Filters for each section
     const this_filters = [
       `Course: ${section.COURSE_NAME}`,
       `Exp: ${section.EXTERNAL_EXPRESSION}`,
@@ -28,38 +39,41 @@
       `Days: ${section.EXTERNAL_EXPRESSION.split('(')[1].replaceAll(')', '')}`,
       `${section.ACTIVE == 1 ? 'Term: Active' : 'Inactive'}`,
       `Meets Today: ${not_in_session ? 'No' : 'Yes'}`
-    ];
+    ]
 
-    this_filters.forEach((filter) => {
-      filters = new Set([...filters, filter]); // Use a new Set to trigger reactivity
-    });
+    // Add each filter to the set
+    this_filters.forEach(filter => filters.add(filter))
   }
 
+  // Lifecycle hook: Runs after the component is mounted
   onMount(async () => {
-    await loadSections();
-    sections.forEach(processSection);
-    filters = new Set([...Array.from(filters).sort((a, b) => {
-      if (a.includes('Meets Today:')) return -1;
-      if (a < b) return -1;
-      if (a > b) return 1;
-      return 0;
-    })]);
-  });
+    // Load sections data and process filters
+    await loadSections()
+    sections.forEach(processSection)
+
+    // Sort filters with special handling for 'Meets Today'
+    filters = new Set([...Array.from(filters).sort((a, b) => a.includes('Meets Today:') ? -1 : a.localeCompare(b))])
+  })
 </script>
 
+<!-- Dropdown menu for section filters -->
 <select name="section_filters" id="section_filters">
   {#if filters.size > 0}
     {#each Array.from(filters) as filter, index (index)}
+      <!-- Use md5 hash as the option value for uniqueness -->
       <option value={md5(filter)}>{filter}</option>
     {/each}
   {:else}
+    <!-- Display a message if no filters are available -->
     <option value="">No filters available</option>
   {/if}
 </select>
 
+<!-- Display the filters for debugging -->
 <pre>{Array.from(filters)}</pre>
 
 <style>
+  /* Styling for the section_filters dropdown */
   #section_filters {
     margin: 0 0 0 10px;
     padding: 0;
