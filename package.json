@@ -13,5 +13,8 @@
     "@tesd-tech/ps-package": "^23.11.1",
     "svelte": "^4.0.5",
     "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "md5": "^2.3.0"
   }
 }
