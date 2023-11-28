@@ -27,8 +27,13 @@
 
   // Process a section and add filters
   function processSection(section) {
+    const this_section = document.querySelector(`[sectionid="${section.ID}"]`)
     // Flag indicating if the section is in session
-    const not_in_session = false
+    let not_in_session
+
+    // Check if the section is in session
+    if (this_section)
+      not_in_session = this_section.querySelector('[src="/images/img/btn_chair_notinsession.png"]')
 
     // Filters for each section
     const this_filters = [
@@ -42,7 +47,29 @@
     ]
 
     // Add each filter to the set
-    this_filters.forEach(filter => filters.add(filter))
+    this_filters.forEach(filter => {
+      filters.add(filter)
+
+      if (this_section)
+        this_section.classList.add(md5(filter))
+    })
+  }
+
+  function handleSelectChange(event) {
+    // Get the selected filter
+    const selected_filter = event.target.value
+
+    // Get all sections
+    const all_sections = document.querySelectorAll('[sectionid]')
+
+    // Hide all sections
+    all_sections.forEach((section) => {
+      section.classList.remove('hidden')
+
+      if (selected_filter && !section.classList.contains(selected_filter)) {
+        section.classList.add('hidden')
+      }
+    })
   }
 
   // Lifecycle hook: Runs after the component is mounted
@@ -51,13 +78,14 @@
     await loadSections()
     sections.forEach(processSection)
 
-    // Sort filters with special handling for 'Meets Today'
+    // Sort filters with special handling for 'Meets Today' and 'All Classes'
     filters = new Set([...Array.from(filters).sort((a, b) => a.includes('Meets Today:') ? -1 : a.localeCompare(b))])
   })
 </script>
 
 <!-- Dropdown menu for section filters -->
-<select name="section_filters" id="section_filters">
+<select name="section_filters" id="section_filters" on:change={handleSelectChange}>
+  <option value="">All Classes</option>
   {#if filters.size > 0}
     {#each Array.from(filters) as filter, index (index)}
       <!-- Use md5 hash as the option value for uniqueness -->
@@ -68,9 +96,6 @@
     <option value="">No filters available</option>
   {/if}
 </select>
-
-<!-- Display the filters for debugging -->
-<pre>{Array.from(filters)}</pre>
 
 <style>
   /* Styling for the section_filters dropdown */
